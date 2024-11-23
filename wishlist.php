@@ -34,6 +34,7 @@ $sql = "
     SELECT 
         p.name, 
         p.price, 
+        p.category,
         w.product_id, 
         w.added_on
     FROM 
@@ -87,7 +88,20 @@ mysqli_close($conn);
                 <?php foreach ($wishlistItems as $item): ?>
                     <div class="col-md-4 mb-4">
                         <div class="card" style="width: 18rem;">
-                            <img src="./images/books-category.jpg" class="card-img-top" alt="Product Image">
+                            <?php
+                            // Determine the image based on the category
+                            $imagePath = '';
+                            if ($item['category'] == 'Electronics') {
+                                $imagePath = './images/electronics-category.jpg';
+                            } elseif ($item['category'] == 'Cloths') {
+                                $imagePath = './images/cloths-category.jpg';
+                            } elseif ($item['category'] == 'Books') {
+                                $imagePath = './images/books-category.jpg'; // Assuming cloths-category image for books
+                            } else {
+                                $imagePath = './images/default-category.jpg'; // Default image if no category matches
+                            }
+                            ?>
+                            <img src="<?= $imagePath; ?>" class="card-img-top" alt="<?= htmlspecialchars($item['name']); ?>">
                             <div class="card-body">
                                 <h5 class="card-title"><?= htmlspecialchars($item['name']); ?></h5>
                                 <p class="card-text">Price: ₹<?= number_format($item['price'], 2); ?></p>
