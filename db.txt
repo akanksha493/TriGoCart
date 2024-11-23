@@ -1,0 +1,125 @@
+CREATE DATABASE ecomm;
+USE ecomm;
+
+
+CREATE TABLE product (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT NOT NULL,
+    category ENUM('Electronics', 'Books', 'Cloths') NOT NULL
+);
+
+INSERT INTO product (name, description, price, stock_quantity, category) VALUES
+-- Electronics
+('Laptop', 'A high-performance laptop for gaming and work.', 79999.20, 50, 'Electronics'),
+('Smartphone', 'Latest model smartphone with advanced features.', 55999.20, 150, 'Electronics'),
+('Wireless Headphones', 'Noise-cancelling wireless headphones.', 15999.20, 75, 'Electronics'),
+('Smartwatch', 'A smartwatch with fitness tracking capabilities.', 19999.20, 100, 'Electronics'),
+('Tablet', 'A lightweight tablet for reading and browsing.', 27999.20, 60, 'Electronics'),
+('External Hard Drive', '1TB external hard drive for data storage.', 7199.20, 200, 'Electronics'),
+('Bluetooth Speaker', 'Portable Bluetooth speaker with great sound.', 10399.20, 80, 'Electronics'),
+('Gaming Monitor', '27-inch gaming monitor with high refresh rate.', 23999.20, 40, 'Electronics'),
+('Wireless Charger', 'Fast wireless charger for smartphones.', 3199.20, 150, 'Electronics'),
+
+-- Books
+('The Great Gatsby', 'A classic novel by F. Scott Fitzgerald.', 879.20, 200, 'Books'),
+('1984', 'A dystopian novel by George Orwell.', 1039.20, 150, 'Books'),
+('To Kill a Mockingbird', 'A novel by Harper Lee about racial injustice.', 1199.20, 100, 'Books'),
+('Pride and Prejudice', 'A romantic novel by Jane Austen.', 959.20, 120, 'Books'),
+('Moby Dick', 'A novel about the voyage of the whaling ship Pequod.', 1279.20, 80, 'Books'),
+('The Catcher in the Rye', 'A novel by J.D. Salinger about teenage angst.', 799.20, 120, 'Books'),
+('The Hobbit', 'A fantasy novel by J.R.R. Tolkien.', 1119.20, 90, 'Books'),
+('War and Peace', 'A historical novel by Leo Tolstoy.', 1599.20, 60, 'Books'),
+('The Alchemist', 'A novel by Paulo Coelho about following your dreams.', 1359.20, 110, 'Books'),
+
+-- Cloths
+('Cotton T-Shirt', 'A comfortable cotton t-shirt available in various sizes.', 1599.20, 300, 'Cloths'),
+('Denim Jeans', 'Stylish denim jeans for casual wear.', 3199.20, 150, 'Cloths'),
+('Leather Jacket', 'A classic leather jacket for all seasons.', 7199.20, 75, 'Cloths'),
+('Wool Sweater', 'Warm wool sweater for winter.', 3999.20, 100, 'Cloths'),
+('Summer Dress', 'A light summer dress for casual outings.', 2399.20, 200, 'Cloths'),
+('Running Shoes', 'Comfortable running shoes for all terrains.', 4799.20, 120, 'Cloths'),
+('Baseball Cap', 'Stylish baseball cap for sunny days.', 1199.20, 180, 'Cloths'),
+('Scarf', 'Warm scarf for winter wear.', 1039.20, 160, 'Cloths'),
+('Formal Shirt', 'A formal shirt suitable for office wear.', 2799.20, 140, 'Cloths');
+
+
+
+INSERT INTO product (id, name, description, price, stock_quantity, category) VALUES
+(28, 'The Silent Patient', 'A psychological thriller by Alex Michaelides.', 499.99, 20, 'Books'),
+(29, 'Where the Crawdads Sing', 'A novel by Delia Owens.', 399.99, 35, 'Books'),
+(30, 'The Vanishing Half', 'A novel by Brit Bennett.', 349.99, 25, 'Books'),
+(31, 'The Midnight Library', 'A novel by Matt Haig.', 299.99, 40, 'Books'),
+(32, 'Project Hail Mary', 'A science fiction novel by Andy Weir.', 599.99, 15, 'Books'),
+(33, 'The Invisible Life of Addie LaRue', 'A fantasy novel by V.E. Schwab.', 449.99, 30, 'Books'),
+(34, 'Mexican Gothic', 'A horror novel by Silvia Moreno-Garcia.', 349.99, 20, 'Books'),
+(35, 'The Guest List', 'A mystery novel by Lucy Foley.', 299.99, 25, 'Books'),
+(36, 'The Four Winds', 'A historical fiction novel by Kristin Hannah.', 399.99, 30, 'Books'),
+(37, 'A Court of Silver Flames', 'A fantasy novel by Sarah J. Maas.', 499.99, 20, 'Books'),
+(38, 'The Last Thing He Told Me', 'A mystery novel by Laura Dave.', 349.99, 25, 'Books'),
+(39, 'The Paris Library', 'A historical fiction novel by Janet Skeslien Charles.', 299.99, 30, 'Books'),
+(40, 'The Giver of Stars', 'A historical fiction novel by Jojo Moyes.', 399.99, 20, 'Books'),
+(41, 'The Night Circus', 'A fantasy novel by Erin Morgenstern.', 349.99, 25, 'Books'),
+(42, 'The Henna Artist', 'A historical fiction novel by Alka Joshi.', 299.99, 30, 'Books'),
+(43, 'The Book of Longings', 'A historical fiction novel by Sue Monk Kidd.', 399.99, 20, 'Books'),
+(44, 'The Dutch House', 'A novel by Ann Patchett.', 349.99, 25, 'Books'),
+(45, 'The Tattooist of Auschwitz', 'A historical fiction novel by Heather Morris.', 299.99, 30, 'Books'),
+(46, 'The Alice Network', 'A historical fiction novel by Kate Quinn.', 399.99, 20, 'Books'),
+(47, 'The Nightingale', 'A historical fiction novel by Kristin Hannah.', 349.99, 25, 'Books'),
+(48, 'The Seven Husbands of Evelyn Hugo', 'A novel by Taylor Jenkins Reid.', 299.99, 30, 'Books'),
+(49, 'The Light We Lost', 'A romance novel by Jill Santopolo.', 399.99, 20, 'Books'),
+(50, 'The Woman in the Window', 'A psychological thriller by A.J. Finn.', 349.99, 25, 'Books'),
+(51, 'The Silent Corner', 'A thriller novel by Dean Koontz.', 299.99, 30, 'Books'),
+(52, 'The Outsider', 'A horror novel by Stephen King.', 399.99, 20, 'Books'),
+(53, 'The Institute', 'A horror novel by Stephen King.', 349.99, 25, 'Books'),
+(54, 'The Water Dancer', 'A historical fiction novel by Ta-Nehisi Coates.', 299.99, 30, 'Books'),
+(55, 'The Testaments', 'A dystopian novel by Margaret Atwood.', 399.99, 20, 'Books'),
+(56, 'The Nickel Boys', 'A historical fiction novel by Colson Whitehead.', 349.99, 25, 'Books'),
+(57, 'The Overstory', 'A novel by Richard Powers.', 299.99, 30, 'Books'),
+(58, 'Kindle Paperwhite', 'The thinnest, lightest Kindle Paperwhite yet with a flush-front design and 300 ppi glare-free display.', 12999.99, 50, 'Electronics'),
+(59, 'Kindle Oasis', 'Our best 7", 300 ppi flush-front Paperwhite display. Adjustable warm light to shift screen shade from white to amber.', 24999.99, 30, 'Electronics'),
+(60, 'Kindle', 'The lightest and most compact Kindle, now with a 6" 167 ppi glare-free display.', 7999.99, 40, 'Electronics'),
+(61, 'Kindle Kids Edition', 'Includes access to thousands of books, a kid-friendly cover, and a 2-year worry-free guarantee.', 10999.99, 20, 'Electronics'),
+(62, 'Kindle Paperwhite Signature Edition', 'Features wireless charging, auto-adjusting front light, and 32 GB storage.', 17999.99, 25, 'Electronics'),
+(63, 'Kindle Voyage', 'High-resolution 300 ppi display, adaptive front light, and PagePress sensors.', 19999.99, 15, 'Electronics'),
+(64, 'iPhone 16 Pro Max', 'The latest iPhone with a stunning display and improved battery life.', 144900.99, 50, 'Electronics'),
+(65, 'Samsung Galaxy S24 Ultra', 'A high-end smartphone with a powerful camera and performance.', 119999.99, 40, 'Electronics'),
+(66, 'Google Pixel 9 Pro XL', 'Google\'s flagship phone with advanced AI features.', 109999.99, 30, 'Electronics'),
+(67, 'OnePlus 12', 'A premium smartphone with fast charging and a sleek design.', 69999.99, 60, 'Electronics'),
+(68, 'Motorola Razr 50 Ultra', 'A foldable smartphone with a unique design and top-notch specs.', 99999.99, 20, 'Electronics'),
+(69, 'Vivo X Fold 3 Pro', 'A foldable phone with a large display and powerful performance.', 89999.99, 25, 'Electronics'),
+(70, 'Realme 13 Pro+ 5G', 'A budget-friendly 5G smartphone with impressive features.', 34999.99, 100, 'Electronics'),
+(71, 'Oppo Find X7 Ultra', 'A high-performance smartphone with a stunning display.', 79999.99, 35, 'Electronics'),
+(72, 'Xiaomi Poco F6 Pro', 'A powerful smartphone with great value for money.', 49999.99, 45, 'Electronics'),
+(73, 'Sony Xperia 1 VI', 'A premium smartphone with excellent camera capabilities.', 99999.99, 55, 'Electronics'),
+(74, 'Nokia XR30', 'A rugged smartphone with long battery life and durability.', 39999.99, 50, 'Electronics'),
+(75, 'Asus ROG Phone 7', 'A gaming smartphone with high performance and advanced cooling.', 89999.99, 30, 'Electronics'),
+(76, 'Huawei P60 Pro', 'A flagship smartphone with a powerful camera and sleek design.', 79999.99, 40, 'Electronics'),
+(77, 'LG Velvet 2 Pro', 'A stylish smartphone with a unique design and good performance.', 69999.99, 25, 'Electronics'),
+(78, 'ZTE Axon 30 Ultra', 'A high-end smartphone with a powerful camera and performance.', 74999.99, 35, 'Electronics'),
+(79, 'Nike Men\'s T-Shirt', 'A comfortable cotton t-shirt available in various colors from Nike.', 999.99, 100, 'Cloths'),
+(80, 'Zara Women\'s Summer Dress', 'A light and airy summer dress perfect for warm weather from Zara.', 1999.99, 50, 'Cloths'),
+(81, 'Levi\'s Men\'s Jeans', 'Classic denim jeans with a modern fit from Levi\'s.', 2999.99, 75, 'Cloths'),
+(82, 'H&M Women\'s Blouse', 'A stylish blouse suitable for both casual and formal occasions from H&M.', 1299.99, 60, 'Cloths'),
+(83, 'The North Face Men\'s Jacket', 'A warm and durable jacket for cold weather from The North Face.', 4999.99, 30, 'Cloths'),
+(84, 'Gucci Women\'s Skirt', 'A fashionable skirt available in various patterns from Gucci.', 4999.99, 40, 'Cloths'),
+(85, 'Adidas Men\'s Shorts', 'Comfortable shorts perfect for summer activities from Adidas.', 1499.99, 80, 'Cloths'),
+(86, 'Uniqlo Women\'s Cardigan', 'A cozy cardigan ideal for layering from Uniqlo.', 1999.99, 45, 'Cloths'),
+(87, 'Armani Men\'s Suit', 'A formal suit perfect for business or special occasions from Armani.', 9999.99, 20, 'Cloths'),
+(88, 'Calvin Klein Women\'s Pants', 'Comfortable and stylish pants for everyday wear from Calvin Klein.', 2999.99, 55, 'Cloths'),
+(89, 'Polo Ralph Lauren Men\'s Polo Shirt', 'A classic polo shirt available in various colors from Polo Ralph Lauren.', 1999.99, 70, 'Cloths'),
+(90, 'Tommy Hilfiger Women\'s Sweater', 'A warm sweater perfect for chilly days from Tommy Hilfiger.', 2499.99, 35, 'Cloths'),
+(91, 'Champion Men\'s Hoodie', 'A comfortable hoodie with a front pocket from Champion.', 1999.99, 50, 'Cloths'),
+(92, 'Lululemon Women\'s Leggings', 'Stretchy and comfortable leggings for workouts or casual wear from Lululemon.', 2999.99, 65, 'Cloths'),
+(93, 'Brooks Brothers Men\'s Dress Shirt', 'A formal dress shirt suitable for business or formal events from Brooks Brothers.', 3999.99, 40, 'Cloths');
+
+
+
+CREATE TABLE wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    added_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);

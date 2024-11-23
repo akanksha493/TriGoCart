@@ -1,0 +1,1337 @@
+<?php
+require('dbconfig.php');
+//session_start();
+?>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Home</title>
+     <link rel="stylesheet" href="style.css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+     </script>
+     <script src="https://kit.fontawesome.com/7f33e8970d.js" crossorigin="anonymous"></script>
+
+
+
+     <style>
+     /* .navgunj {
+          background-color: transparent !important;
+          border: none;
+          box-shadow: none;
+          /* Optional: Removes any shadows if present 
+          color: hsl(28, 88%, 62%);
+     }
+
+     .nav-item {
+          color: hsl(28, 88%, 62%);
+     }
+
+     /* .navul {
+          display: grid;
+          grid-template-columns: auto 1fr max-content 50px;
+          align-items: center;
+          gap: 3rem;
+          padding-left: 20%
+     } 
+
+     .navulgunj li {
+          display: inline;
+          margin-right: 1.5rem;
+          color: hsl(28, 88%, 62%);
+     }
+
+     .navulgunj {
+          align-items: right;
+          display: block;
+     } */
+
+     /* a {
+          text-decoration: none;
+          cursor: pointer;
+     } */
+     </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+     <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light navgunj"> -->
+     <nav class="navbar navbar-expand-lg navgunj">
+          <div class="container-fluid">
+               <div class="logo">
+                    <h1>HAGS</h1>
+               </div>
+               <!-- <form class="d-flex" action="search.php" method="get">
+                    <input class="form-control me-2" type="search" name="search" id="search" placeholder="Search here"
+                         aria-label="Search">
+                    <button class="btn btn-outline-success btnsearch" type="submit">Go</button>
+               </form> -->
+               <div style="display: flex; justify-content: center;">
+                    <input id="search" type="text" placeholder="Search for products..." />
+                    <button class="go-bttn">Go</button>
+               </div>
+
+               <div class="navlist">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 navulgunj">
+                         <li class="nav-item"><a class="nav-link" href="index.php">
+                                   <div class="navdiv">Home</div>
+                              </a>
+                         </li>
+                         <li class=" nav-item">
+                              <a class="nav-link" href="get_electronics.php">
+                                   <div class="navdiv">Electronics</div>
+                              </a>
+                         </li>
+                         <li class="nav-item"><a class="nav-link" href="get_cloths.php">
+                                   <div class="navdiv">Apparel</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="get_books.php">
+                                   <div class="navdiv">Books</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="wishlist.php">
+                                   <div class="navdiv">Wishlist</div>
+                              </a>
+                         </li>
+                         <li class="nav-item"><a class="nav-link" href="cart.php">
+                                   <div class="navdiv">Cart</div>
+                              </a>
+                         </li>
+                         <li class="nav-item"><a class="nav-link" href="register.php">
+                                   <div class="navdiv">Register</div>
+                              </a></li>
+                    </ul>
+               </div>
+
+               <div class="user-profile login">
+                    <i class="fa-regular fa-user" aria-hidden="true"></i>
+                    <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']): ?>
+                    <p class="d-inline-block" style="font-size: 12px;">
+                         <?= htmlspecialchars($_SESSION['firstname']) . ' ' . htmlspecialchars($_SESSION['lastname']); ?>
+                    </p>
+                    <a class="logdiva" href="logout.php" style="text-decoration: none;">
+                         <div class="logdiv">Log out</div>
+                    </a>
+                    <?php else: ?>
+                    <a class="logdiva" href="login.php" style="text-decoration: none;">
+                         <div class="logdiv">Log in</div>
+                    </a>
+                    <?php endif; ?>
+               </div>
+
+          </div>
+     </nav>
+
+</body>
+
+</html>
+
+
+
+
+logout.php
+
+<?php
+ include('header.php');
+session_start();
+$_SESSION = array();
+session_destroy();
+header("location: index.php");
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OLD LOGIN.PHP
+
+
+
+
+
+<?php
+ob_start(); // Start output buffering
+// include('header.php');
+require "dbconfig.php";
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Your login logic here
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    // Assuming you have logic to validate user credentials
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    // Validate credentials
+    $sql = "SELECT id, username, password FROM users WHERE username = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $username);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
+
+    if (mysqli_stmt_num_rows($stmt) == 1) {
+        mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
+        if (mysqli_stmt_fetch($stmt)) {
+            if (password_verify($password, $hashed_password)) {
+                // Password is correct, start a new session
+                session_start();
+                $_SESSION['id'] = $id;
+                $_SESSION['username'] = $username;
+                header("location: index.php");
+                exit;
+            } else {
+                // Display an error message if password is not valid
+                $password_err = "The password you entered was not valid.";
+            }
+        }
+    } else {
+        // Display an error message if username doesn't exist
+        $username_err = "No account found with that username.";
+    }
+
+    mysqli_stmt_close($stmt);
+}
+
+// Close connection
+mysqli_close($conn);
+ob_end_flush(); // End output buffering and flush output
+?>
+
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+     <!-- Required meta tags -->
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+     <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+     <link rel="stylesheet" href="projectstyles.css">
+     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+     <title>Login-HAGS</title>
+     <style>
+     body {
+          background-color: #f8f9fa;
+          /* Light background color */
+     }
+
+     .forms {
+          margin-top: 100px;
+          /* Space from the top */
+     }
+
+     .form-content {
+          background-color: #ffffff;
+          /* White background for the form */
+          padding: 30px;
+          /* Padding inside the form */
+          border-radius: 10px;
+          /* Rounded corners */
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          /* Subtle shadow */
+     }
+
+     .headerr {
+          font-size: 24px;
+          margin-bottom: 20px;
+          text-align: center;
+          font-weight: bold;
+          /* Bold header */
+     }
+
+     .input-field {
+          margin-bottom: 15px;
+          position: relative;
+          /* Position relative for the icon */
+     }
+
+     .button-field {
+          text-align: center;
+     }
+
+     .form-link {
+          text-align: center;
+          /* Center align the link */
+          margin-top: 15px;
+          /* Space above the link */
+     }
+
+     .btn-primary {
+          width: 100%;
+          /* Full width button */
+     }
+
+     .eye-icon {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          cursor: pointer;
+     }
+     </style>
+</head>
+
+<body>
+     <header>
+          <?php include('header.php'); ?>
+          <!-- Include the navbar here -->
+     </header>
+     <section class="container forms">
+          <div class="row justify-content-center">
+               <div class="col-md-4">
+                    <div class="form-content">
+                         <div class="headerr">Login</div>
+                         <form action="" method="post">
+                              <div class="field input-field">
+                                   <input type="text" name="username" placeholder="Username" class="input form-control"
+                                        required>
+                              </div>
+
+                              <div class="field input-field">
+                                   <input type="password" id="password" name="password" placeholder="Password"
+                                        class="password form-control" required>
+                                   <!-- <i class='bx bx-hide eye-icon' id="togglePassword" onclick="togglePassword()"></i> -->
+                              </div>
+
+                              <div class="field button-field">
+                                   <button type="submit" class="btn btn-primary">Login</button>
+                              </div>
+                         </form>
+                         <div class="form-link">
+                              <span>Don't have an account? <a href="register.php" class="link signup-link">Sign
+                                        Up</a></span>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </section>
+
+     <!-- Optional JavaScript -->
+     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+          integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+     </script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+          integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+     </script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OLD INDEX.PHP
+
+
+
+
+
+
+
+<?php
+require('dbconfig.php'); // Ensure the database connection is included
+//session_start(); // Start the session if not already started
+
+if (isset($_SESSION['username'])): ?>
+<p>Welcome, <?= htmlspecialchars($_SESSION['username']); ?>!</p>
+<?php endif; ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Home</title>
+     <link rel="stylesheet" href="style.css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+     </script>
+     <script src="https://kit.fontawesome.com/7f33e8970d.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+     <header>
+          <?php include('header.php'); ?>
+          <!-- Include the navbar here -->
+     </header>
+     <div class="maincontent1">
+          <div class="text">
+               <div class="textbox">
+                    <div class="text1">
+                         <h1>Select The Best</h1>
+                    </div>
+                    <div class="text1">
+                         <h1>Quality Products</h1>
+                    </div>
+                    <a href="" class="btn1" style="text-decoration: none;">
+                         <div class="but">Shop Now
+                         </div>
+                    </a>
+               </div>
+          </div>
+          <!-- <div class="pict"></div> -->
+
+     </div>
+
+     <!-- <footer>
+          <p>&copy; 2024 Random company name. All rights reserved.</p>
+     </footer> -->
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+old header.php
+
+
+
+
+
+<?php
+require('dbconfig.php');
+//session_start(); // Make sure the session is started to access session variables
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Home</title>
+     <link rel="stylesheet" href="style.css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+     </script>
+     <script src="https://kit.fontawesome.com/7f33e8970d.js" crossorigin="anonymous"></script>
+
+     <style>
+     /* Styling overrides (if necessary) */
+     .navgunj {
+          background-color: transparent !important;
+          border: none;
+          box-shadow: none;
+          color: hsl(28, 88%, 62%);
+     }
+
+     .nav-item {
+          color: hsl(28, 88%, 62%);
+     }
+
+     a {
+          text-decoration: none;
+          cursor: pointer;
+     }
+     </style>
+</head>
+
+<body>
+     <nav class="navbar navbar-expand-lg navgunj">
+          <div class="container-fluid">
+               <div class="logo">
+                    <h1>HAGS</h1>
+               </div>
+
+               <!-- Search bar -->
+               <div style="display: flex; justify-content: center;">
+                    <input id="search" type="text" placeholder="Search for products..." />
+                    <button class="go-bttn">Go</button>
+               </div>
+
+               <!-- Navigation list -->
+               <div class="navlist">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 navulgunj">
+                         <li class="nav-item"><a class="nav-link" href="index.php">
+                                   <div class="navdiv">Home</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="get_electronics.php">
+                                   <div class="navdiv">Electronics</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="get_cloths.php">
+                                   <div class="navdiv">Apparel</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="get_books.php">
+                                   <div class="navdiv">Books</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="wishlist.php">
+                                   <div class="navdiv">Wishlist</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="cart.php">
+                                   <div class="navdiv">Cart</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="register.php">
+                                   <div class="navdiv">Register</div>
+                              </a></li>
+                    </ul>
+               </div>
+
+               <!-- Login/Logout & User Profile Section -->
+               <div class="user-profile login">
+                    <i class="fa-regular fa-user" aria-hidden="true"></i>
+                    <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']): ?>
+                    <!-- Display the first name and last name if logged in -->
+                    <p class="d-inline-block" style="font-size: 12px;">
+                         <?= htmlspecialchars($_SESSION['first_name']) . ' ' . htmlspecialchars($_SESSION['lastname']); ?>
+                    </p>
+                    <a class="logdiva" href="logout.php" style="text-decoration: none;">
+                         <div class="logdiv">Log out</div>
+                    </a>
+                    <?php else: ?>
+                    <!-- Display Login link if not logged in -->
+                    <a class="logdiva" href="login.php" style="text-decoration: none;">
+                         <div class="logdiv">Log in</div>
+                    </a>
+                    <?php endif; ?>
+               </div>
+
+          </div>
+     </nav>
+
+</body>
+
+</html>
+
+
+<div class="user-profile login">
+                    <i class="fa-regular fa-user icon" aria-hidden="true"></i>
+
+                    <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']): ?>
+                    <p class="d-inline-block logdiva">
+                         <?= htmlspecialchars($_SESSION['first_name']); ?>
+                    </p>
+                    <a class="logdiva" href="logout.php" style="text-decoration: none;">Log out</a>
+                    <?php else: ?>
+                    <a class="logdiva" href="login.php" style="text-decoration: none;">Log in</a>
+                    <?php endif; ?>
+               </div>
+
+
+
+
+
+
+
+
+
+* .login {
+	background: transparent;
+	color: var(--yellow);
+	/* font-size: 0.9rem; */
+	height: 5vh;
+	width: 6vw;
+	text-decoration: none;
+	/* border: 2px solid #ff004f; */
+	/* font-weight: bold; */
+	/* padding: 13px 30px; */
+	border-radius: 30px;
+	transition: 0.4s ease;
+	display: flex;
+	flex-direction: column;
+	/* text-align: center;
+	justify-items: center;
+	place-items: center;
+	align-items: center;
+	justify-content: center;
+	align-content: center;
+	place-content: center; */
+	font-size: 1.2rem;
+	cursor: pointer;
+	text-shadow: -2px -2px 0 black, /* Top-left */ 2px -2px 0 black,
+		/* Top-right */ -2px 2px 0 black, /* Bottom-left */ 2px 2px 0 black; /* Bottom-right */
+
+	/* padding-right: 3%; */
+}
+.login:hover {
+	background: var(--yellow);
+	color: rgb(22, 20, 15);
+	text-shadow: -0.5px -0.5px 0 black, /* Top-left */ 0.5px -0.5px 0 black,
+		/* Top-right */ -0.5px 0.5px 0 black, /* Bottom-left */ 0.5px 0.5px 0 black; /* Bottom-right */
+
+	border: 2px solid var(--yellow);
+	box-shadow: 0 0 5px var(--yellow), 0 0 25pxhsl (28, 88%, 62%);
+	cursor: pointer;
+	transform: scale(1.1);
+} */
+
+/* .logdiva {
+	color: var(--yellow);
+	text-decoration: none;
+	font-size: small;
+	height: 2rem;
+} */
+
+
+
+
+
+<!-- <div class="user-profile login">
+                    <!-- <div class="logdiva"> 
+                    <i class="fa-regular fa-user icon" aria-hidden="true"></i>
+
+                    <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']): ?>
+                    <p class="d-inline-block logdiva">
+                         <?= htmlspecialchars($_SESSION['first_name']); ?>
+
+                         <!-- </div> 
+
+                    </p>
+                    <a class="logdiva" href="logout.php" style="text-decoration: none;">Log out</a>
+                    <?php else: ?>
+                    <a class="logdiva" href="login.php" style="text-decoration: none;">Log in</a>
+                    <?php endif; ?>
+               </div> -->
+
+
+
+<ul class=" navulgunj">
+                         <!-- <ul class="navbar-nav me-auto mb-2 mb-lg-0 navulgunj"> -->
+                         <li class="nav-item"><a class="nav-link" href="index.php">
+                                   <div class="navdiv">Home</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="get_electronics.php">
+                                   <div class="navdiv">Electronics</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="get_cloths.php">
+                                   <div class="navdiv">Apparel</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="get_books.php">
+                                   <div class="navdiv">Books</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="wishlist.php">
+                                   <div class="navdiv">Wishlist</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="cart.php">
+                                   <div class="navdiv">Cart</div>
+                              </a></li>
+                         <li class="nav-item"><a class="nav-link" href="register.php">
+                                   <div class="navdiv">Register</div>
+                              </a></li>
+
+                         <li class="nav-item" style="display: flex; flex-direction: row;">
+
+
+                              <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']): ?>
+                              <!-- <p class="nav-link"> -->
+                              <div class="navdiv">
+                                   <i class="fa-regular fa-user icon" aria-hidden="true"></i>
+
+                                   <!-- <p class="d-inline-block nav-link"> -->
+                                   <?= htmlspecialchars($_SESSION['first_name']); ?>
+                              </div>
+                              <!-- </p> -->
+                              <!-- <a class="nav-link" href="register.php">
+                                   <div class="navdiv">Register</div>
+                              </a></li> -->
+
+                         <li class="nav-item">
+
+                              <a class="nav-link" href="logout.php" style="text-decoration: none;">
+                                   <div class="navdiv">Log out</div>
+                              </a>
+                              <?php else: ?>
+                              <a class="nav-link" href="login.php" style="text-decoration: none;">
+                                   <div class="navdiv">Log in</div>
+                              </a>
+                              <?php endif; ?>
+
+                              <!-- <a class="nav-link" href="register.php">
+                                   <div class="navdiv">Register</div>
+                              </a> -->
+                         </li>
+                    </ul>
+
+
+
+
+
+
+
+
+<div class="gunjanlogin">
+          <div class="row justify-content-center gunjanddd">
+               <div class="col-md-4">
+                    <div class="form-content">
+                         <div class="headerr">Login</div>
+                         <form action="" method="post">
+                              <div class="field input-field">
+                                   <input type="text" name="username" placeholder="Username" class="input form-control"
+                                        required>
+                              </div>
+
+                              <div class="field input-field">
+                                   <input type="password" name="password" placeholder="Password"
+                                        class="password form-control" required>
+                              </div>
+
+                              <div class="field button-field ">
+                                   <button type="submit" class="btn btn-primary"
+                                        style="background-color:rgb(255, 210, 0, 0.9); border-color: var(--yellow); color: rgba(0, 0, 0, 0.631);">Login</button>
+                              </div>
+                         </form>
+                         <div class="form-link">
+                              <span>Don't have an account? <a href="register.php" class="link signup-link">Sign
+                                        Up</a></span>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+
+
+
+.cartcont {
+	display: flex;
+	flex-direction: column;
+	background-image: url("./images/desk-office.jpg");
+	background-size: contain; /* Ensures the entire image fits without cropping */
+	background-position: center; /* Centers the image within the div */
+	background-repeat: no-repeat; /* Prevents repeating of the image */
+
+	height: 90vh;
+	width: 100vw;
+	/* width: 100%; */
+	/* margin-top: 10%;
+	margin-left: 15%;
+	margin-right: 10%; */
+}
+
+
+
+
+
+
+
+
+<div class="cartcont">
+          <?php if (empty($cartItems)): ?>
+          <p class="alert alert-info">Your cart is empty!</p>
+          <?php else: ?>
+          <table class="table table-striped">
+               <thead>
+                    <tr>
+                         <th>Product</th>
+                         <th>Price</th>
+                         <th>Quantity</th>
+                         <th>Total</th>
+                         <th>Actions</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <?php 
+                    $grandTotal = 0;
+                    foreach ($cartItems as $productId => $item): 
+                        $itemTotal = $item['price'] * $item['quantity'];
+                        $grandTotal += $itemTotal;
+                    ?>
+                    <tr>
+                         <td><?= htmlspecialchars($item['name']); ?></td>
+                         <td>₹<?= number_format($item['price'], 2); ?></td>
+                         <td>
+                              <form method="POST" action="">
+                                   <input type="hidden" name="product_id" value="<?= $productId; ?>">
+                                   <input type="number" name="quantity" value="<?= $item['quantity']; ?>" min="1"
+                                        style="width: 60px;">
+                                   <button type="submit" name="update_quantity"
+                                        class="btn btn-sm btn-secondary">Update</button>
+                              </form>
+                         </td>
+                         <td>₹<?= number_format($itemTotal, 2); ?></td>
+                         <td>
+                              <form method="POST" action="">
+                                   <input type="hidden" name="product_id" value="<?= $productId; ?>">
+                                   <button type="submit" name="remove_item"
+                                        class="btn btn-sm btn-danger">Remove</button>
+                              </form>
+                         </td>
+                    </tr>
+                    <?php endforeach; ?>
+               </tbody>
+          </table>
+
+          <div class="d-flex justify-content-between align-items-center">
+               <h3>Total: ₹<?= number_format($grandTotal, 2); ?></h3>
+               <form method="POST" action="">
+                    <button type="submit" name="clear_cart" class="btn btn-warning btnn">Clear Cart</button>
+               </form>
+          </div>
+          <?php endif; ?>
+     </div>
+
+
+
+<?php
+session_start(); // Start session to use cart functionality
+include('header.php'); // Include the header
+
+// Initialize the cart if it doesn't exist
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+// Handle removing an item from the cart
+if (isset($_POST['remove_item'])) {
+    $productId = $_POST['product_id'];
+    unset($_SESSION['cart'][$productId]);
+}
+
+// Handle updating quantity
+if (isset($_POST['update_quantity'])) {
+    $productId = $_POST['product_id'];
+    $quantity = intval($_POST['quantity']);
+    if ($quantity > 0) {
+        $_SESSION['cart'][$productId]['quantity'] = $quantity;
+    } else {
+        unset($_SESSION['cart'][$productId]);
+    }
+}
+
+// Handle clearing the cart
+if (isset($_POST['clear_cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+// Fetch cart items
+$cartItems = $_SESSION['cart'];
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Your Cart</title>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+     <script>
+     document.addEventListener("DOMContentLoaded", function() {
+          const cartItems = document.querySelectorAll("#cart-items tr");
+
+          cartItems.forEach((row) => {
+               const productId = row.dataset.productId;
+               const minusBtn = row.querySelector(".minus-btn");
+               const plusBtn = row.querySelector(".plus-btn");
+               const quantityInput = row.querySelector(".cart-quantity-input");
+               const productTotal = row.querySelector(".cart-product-total");
+               const price = parseFloat(row.querySelector(".cart-product-price").textContent
+                    .replace(/₹|,/g, ""));
+               const grandTotalElem = document.getElementById("grand-total");
+
+               const updateQuantity = async (action) => {
+                    let quantity = parseInt(quantityInput.value);
+                    if (action === "increase") quantity++;
+                    if (action === "decrease" && quantity > 1) quantity--;
+
+                    // Update UI immediately
+                    quantityInput.value = quantity;
+                    const newTotal = quantity * price;
+                    productTotal.textContent = `₹${newTotal.toFixed(2)}`;
+
+                    // Send update to server using AJAX
+                    const response = await fetch("update_cart.php", {
+                         method: "POST",
+                         headers: {
+                              "Content-Type": "application/json",
+                         },
+                         body: JSON.stringify({
+                              product_id: productId,
+                              quantity
+                         }),
+                    });
+
+                    if (response.ok) {
+                         const {
+                              grandTotal
+                         } = await response.json();
+                         grandTotalElem.textContent = `Total: ₹${grandTotal.toFixed(2)}`;
+                    } else {
+                         console.error("Failed to update cart");
+                    }
+               };
+
+               minusBtn.addEventListener("click", () => updateQuantity("decrease"));
+               plusBtn.addEventListener("click", () => updateQuantity("increase"));
+          });
+     });
+     </script>
+
+     <header>
+          <?php include('header.php'); ?>
+          <!-- Include the navbar here -->
+     </header>
+     <div class="cart-container">
+          <?php if (empty($cartItems)): ?>
+          <p class="cart-empty-message">Your cart is empty!</p>
+          <?php else: ?>
+          <div class="cart-container">
+               <?php if (empty($cartItems)): ?>
+               <p class="cart-empty-message">Your cart is empty!</p>
+               <?php else: ?>
+               <h1 class="cart-title">Your Shopping Cart</h1>
+               <div class="cart-table-wrapper">
+                    <table class="cart-table">
+                         <thead>
+                              <tr>
+                                   <th>Product</th>
+                                   <th>Price</th>
+                                   <th>Quantity</th>
+                                   <th>Total</th>
+                                   <th>Actions</th>
+                              </tr>
+                         </thead>
+                         <tbody id="cart-items">
+                              <?php 
+                    $grandTotal = 0;
+                    foreach ($cartItems as $productId => $item): 
+                        $itemTotal = $item['price'] * $item['quantity'];
+                        $grandTotal += $itemTotal;
+                    ?>
+                              <tr data-product-id="<?= $productId; ?>">
+                                   <td class="cart-product-name"><?= htmlspecialchars($item['name']); ?></td>
+                                   <td class="cart-product-price">₹<?= number_format($item['price'], 2); ?></td>
+                                   <td class="cart-product-quantity">
+                                        <div class="quantity-controls">
+                                             <button class="quantity-btn minus-btn" data-action="decrease">-</button>
+                                             <input type="text" class="cart-quantity-input"
+                                                  value="<?= $item['quantity']; ?>" readonly>
+                                             <button class="quantity-btn plus-btn" data-action="increase">+</button>
+                                        </div>
+                                   </td>
+                                   <td class="cart-product-total">₹<?= number_format($itemTotal, 2); ?></td>
+                                   <td class="cart-product-actions">
+                                        <form method="POST" action="">
+                                             <input type="hidden" name="product_id" value="<?= $productId; ?>">
+                                             <button type="submit" name="remove_item" class="btn-remove">Remove</button>
+                                        </form>
+                                   </td>
+                              </tr>
+                              <?php endforeach; ?>
+                         </tbody>
+                    </table>
+               </div>
+               <div class="cart-summary">
+                    <h3 id="grand-total">Total: ₹<?= number_format($grandTotal, 2); ?></h3>
+                    <form method="POST" action="">
+                         <button type="submit" name="clear_cart" class="btn-clear-cart">Clear Cart</button>
+                    </form>
+               </div>
+               <?php endif; ?>
+          </div>
+
+
+          <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+               crossorigin="anonymous">
+          </script>
+          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous">
+          </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+session_start(); // Start session to use cart functionality
+include('header.php'); // Include the header
+
+// Initialize the cart if it doesn't exist
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+// Handle removing an item from the cart
+if (isset($_POST['remove_item'])) {
+    $productId = $_POST['product_id'];
+    unset($_SESSION['cart'][$productId]);
+}
+
+// Handle updating quantity
+if (isset($_POST['update_quantity'])) {
+    $productId = $_POST['product_id'];
+    $quantity = intval($_POST['quantity']);
+    if ($quantity > 0) {
+        $_SESSION['cart'][$productId]['quantity'] = $quantity;
+    } else {
+        unset($_SESSION['cart'][$productId]);
+    }
+}
+
+// Handle clearing the cart
+if (isset($_POST['clear_cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+// Fetch cart items
+$cartItems = $_SESSION['cart'];
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Your Cart</title>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+     <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+     <header>
+          <?php include('header.php'); ?>
+     </header>
+
+     <div class="cart-container">
+          <?php if (empty($cartItems)): ?>
+          <p class="cart-empty-message">Your cart is empty!</p>
+          <?php else: ?>
+          <h1 class="cart-title">Your Shopping Cart</h1>
+          <div class="cart-table-wrapper">
+               <table class="cart-table">
+                    <thead>
+                         <tr>
+                              <th>Product</th>
+                              <th>Price</th>
+                              <th>Quantity</th>
+                              <th>Total</th>
+                              <th>Actions</th>
+                         </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                         <?php 
+                        $grandTotal = 0;
+                        foreach ($cartItems as $productId => $item): 
+                            $itemTotal = $item['price'] * $item['quantity'];
+                            $grandTotal += $itemTotal;
+                        ?>
+                         <tr data-product-id="<?= $productId; ?>">
+                              <td class="cart-product-name"><?= htmlspecialchars($item['name']); ?></td>
+                              <td class="cart-product-price">₹<?= number_format($item['price'], 2); ?></td>
+                              <td class="cart-product-quantity">
+                                   <div class="quantity-controls">
+                                        <button class="quantity-btn minus-btn" data-action="decrease">-</button>
+                                        <input type="text" class="cart-quantity-input" value="<?= $item['quantity']; ?>"
+                                             readonly>
+                                        <button class="quantity-btn plus-btn" data-action="increase">+</button>
+                                   </div>
+                              </td>
+                              <td class="cart-product-total">₹<?= number_format($itemTotal, 2); ?></td>
+                              <td class="cart-product-actions">
+                                   <form method="POST" action="">
+                                        <input type="hidden" name="product_id" value="<?= $productId; ?>">
+                                        <button type="submit" name="remove_item" class="btn-remove">Remove</button>
+                                   </form>
+                              </td>
+                         </tr>
+                         <?php endforeach; ?>
+                    </tbody>
+               </table>
+          </div>
+          <div class="cart-summary">
+               <h3 id="grand-total">Total: ₹<?= number_format($grandTotal, 2); ?></h3>
+               <form method="POST" action="">
+                    <button type="submit" name="clear_cart" class="btn-clear-cart">Clear Cart</button>
+               </form>
+          </div>
+          <?php endif; ?>
+     </div>
+
+     <script>
+     document.addEventListener("DOMContentLoaded", function() {
+          const cartItems = document.querySelectorAll("#cart-items tr");
+
+          cartItems.forEach((row) => {
+               const productId = row.dataset.productId;
+               const minusBtn = row.querySelector(".minus-btn");
+               const plusBtn = row.querySelector(".plus-btn");
+               const quantityInput = row.querySelector(".cart-quantity-input");
+               const productTotal = row.querySelector(".cart-product-total");
+               const price = parseFloat(row.querySelector(".cart-product-price").textContent
+                    .replace(/₹|,/g, ""));
+               const grandTotalElem = document.getElementById("grand-total");
+
+               const updateQuantity = async (action) => {
+                    let quantity = parseInt(quantityInput.value);
+                    if (action === "increase") quantity++;
+                    if (action === "decrease" && quantity > 1) quantity--;
+
+                    // Update UI immediately
+                    quantityInput.value = quantity;
+                    const newTotal = quantity * price;
+                    productTotal.textContent = `₹${newTotal.toFixed(2)}`;
+
+                    // Send update to server using AJAX
+                    const response = await fetch("update_cart.php", {
+                         method: "POST",
+                         headers: {
+                              "Content-Type": "application/json",
+                         },
+                         body: JSON.stringify({
+                              product_id: productId,
+                              quantity
+                         }),
+                    });
+
+                    if (response.ok) {
+                         const {
+                              grandTotal
+                         } = await response.json();
+                         grandTotalElem.textContent = `Total: ₹${grandTotal.toFixed(2)}`;
+                    } else {
+                         console.error("Failed to update cart");
+                    }
+               };
+
+               minusBtn.addEventListener("click", () => updateQuantity("decrease"));
+               plusBtn.addEventListener("click", () => updateQuantity("increase"));
+          });
+     });
+     </script>
+
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous">
+     </script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous">
+     </script>
+</body>
+
+</html>
+
+document.addEventListener("DOMContentLoaded", function() {
+          const cartItems = document.querySelectorAll("#cart-items tr");
+
+          cartItems.forEach((row) => {
+               const productId = row.dataset.productId;
+               const minusBtn = row.querySelector(".minus-btn");
+               const plusBtn = row.querySelector(".plus-btn");
+               const quantityInput = row.querySelector(".cart-quantity-input");
+               const productTotal = row.querySelector(".cart-product-total");
+               const price = parseFloat(row.querySelector(".cart-product-price").textContent
+                    .replace(/₹|,/g, ""));
+               const grandTotalElem = document.getElementById("grand-total");
+
+               const updateQuantity = async (action) => {
+                    let quantity = parseInt(quantityInput.value);
+
+                    // Update quantity based on the action
+                    if (action === "increase") {
+                         quantity++;
+                    } else if (action === "decrease") {
+                         if (quantity > 1) {
+                              quantity--;
+                         } else {
+                              // Remove item from cart if quantity is 1
+                              row.remove();
+                         }
+                    }
+
+                    // Update UI immediately if item is not removed
+                    if (quantity > 0) {
+                         quantityInput.value = quantity;
+                         const newTotal = quantity * price;
+                         productTotal.textContent = `₹${newTotal.toFixed(2)}`;
+                    }
+
+                    // Send update to server using AJAX
+                    const response = await fetch("update_cart.php", {
+                         method: "POST",
+                         headers: {
+                              "Content-Type": "application/json",
+                         },
+                         body: JSON.stringify({
+                              product_id: productId,
+                              quantity
+                         }),
+                    });
+
+                    if (response.ok) {
+                         const {
+                              grandTotal
+                         } = await response.json();
+                         grandTotalElem.textContent = `Total: ₹${grandTotal.toFixed(2)}`;
+                    } else {
+                         console.error("Failed to update cart");
+                    }
+               };
+
+               minusBtn.addEventListener("click", () => updateQuantity("decrease"));
+               plusBtn.addEventListener("click", () => updateQuantity("increase"));
+          });
+     });
+
+
+
