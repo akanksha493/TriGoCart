@@ -58,7 +58,9 @@ if (isset($_SESSION['wishlist'])) {
 </head>
 
 <body>
-    
+    <header>
+          <?php include('header.php'); ?>
+     </header>
     <div class="cart-container">
         <div class="cart-title">Your Wishlist</div>
 
