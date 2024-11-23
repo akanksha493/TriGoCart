@@ -16,11 +16,25 @@ if (!isset($_SESSION['id'])) {
 
 $userId = $_SESSION['id']; // Get the user ID from the session
 
+// Handle "Remove from Wishlist" action
+if (isset($_POST['remove_from_wishlist'])) {
+    $productId = $_POST['product_id'];
+
+    // SQL query to remove the product from the wishlist
+    $sql_remove = "DELETE FROM wishlist WHERE user_id = '$userId' AND product_id = '$productId'";
+    if (mysqli_query($conn, $sql_remove)) {
+        echo "Product removed from wishlist!";
+    } else {
+        echo "Error: " . mysqli_error($conn);
+    }
+}
+
 // Prepare the SQL query to fetch wishlist items along with product details
 $sql = "
     SELECT 
         p.name, 
         p.price, 
+        w.product_id, 
         w.added_on
     FROM 
         wishlist w
@@ -78,6 +92,12 @@ mysqli_close($conn);
                                 <h5 class="card-title"><?= htmlspecialchars($item['name']); ?></h5>
                                 <p class="card-text">Price: ₹<?= number_format($item['price'], 2); ?></p>
                                 <p class="card-text">Added on: <?= date("F j, Y, g:i a", strtotime($item['added_on'])); ?></p>
+                                
+                                <!-- Remove from Wishlist Form -->
+                                <form method="POST" action="">
+                                    <input type="hidden" name="product_id" value="<?= $item['product_id']; ?>">
+                                    <button type="submit" name="remove_from_wishlist" class="btn btn-danger">Remove from Wishlist</button>
+                                </form>
                             </div>
                         </div>
                     </div>
