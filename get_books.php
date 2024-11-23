@@ -32,16 +32,23 @@ if (isset($_POST['add_to_cart'])) {
 
 // Handle "Add to Wishlist" action
 if (isset($_POST['add_to_wishlist'])) {
-    if (isset($_SESSION['user_id'])) {  // Ensure the user is logged in
-        $userId = $_SESSION['user_id'];
+    if (isset($_SESSION['id'])) {  // Ensure the user is logged in
+        $userId = $_SESSION['id'];
         $productId = $_POST['product_id'];
 
-        // Insert the product into the wishlist table
-        $sql_wishlist = "INSERT INTO wishlist (user_id, product_id) VALUES ('$userId', '$productId')";
-        if (mysqli_query($conn, $sql_wishlist)) {
-            echo "Product added to wishlist!";
+        // Check if the product is already in the wishlist
+        $checkWishlistQuery = "SELECT * FROM wishlist WHERE user_id = '$userId' AND product_id = '$productId'";
+        $checkResult = mysqli_query($conn, $checkWishlistQuery);
+        if (mysqli_num_rows($checkResult) == 0) {
+            // Insert the product into the wishlist table if it's not already there
+            $sql_wishlist = "INSERT INTO wishlist (user_id, product_id) VALUES ('$userId', '$productId')";
+            if (mysqli_query($conn, $sql_wishlist)) {
+                echo "Product added to wishlist!";
+            } else {
+                echo "Error: " . mysqli_error($conn);
+            }
         } else {
-            echo "Error: " . mysqli_error($conn);
+            echo "This product is already in your wishlist!";
         }
     } else {
         echo "You need to log in to add to the wishlist.";
@@ -95,7 +102,7 @@ mysqli_close($conn); // Use mysqli_close for procedural style
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($product['name']); ?></h5>
                         <p class="card-text"><?= htmlspecialchars($product['description']); ?></p>
-                        <p class="card-text"><strong>Price:</strong> <?= htmlspecialchars(number_format($product['price'], 2)); ?></p>
+                        <p class="card-text"><strong>Price:</strong> ₹<?= htmlspecialchars(number_format($product['price'], 2)); ?></p>
                         <p class="card-text"><strong>Stock:</strong> <?= htmlspecialchars($product['stock_quantity']); ?></p>
 
                         <!-- Add to Cart Form -->

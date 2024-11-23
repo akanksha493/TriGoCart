@@ -3,7 +3,7 @@
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['id'])) {
     header("Location: login.php"); // Redirect to login if not logged in
     exit();
 }
@@ -23,7 +23,7 @@ if ($conn->connect_error) {
 }
 
 // Get the logged-in user's ID from the session
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id'];
 
 // Add to wishlist logic
 if (isset($_POST['add_to_wishlist'])) {
@@ -80,7 +80,8 @@ $productResult = $conn->query($productQuery);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wishlist</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -103,14 +104,14 @@ $productResult = $conn->query($productQuery);
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="wishlist-items">
                         <?php if ($wishlistResult->num_rows > 0): ?>
                             <?php while ($row = $wishlistResult->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($row['name']) ?></td>
-                                    <td><?= htmlspecialchars($row['description']) ?></td>
-                                    <td>$<?= number_format($row['price'], 2) ?></td>
-                                    <td><?= htmlspecialchars($row['category']) ?></td>
+                                <tr data-product-id="<?= $row['id']; ?>">
+                                    <td><?= htmlspecialchars($row['name']); ?></td>
+                                    <td><?= htmlspecialchars($row['description']); ?></td>
+                                    <td>₹<?= number_format($row['price'], 2); ?></td>
+                                    <td><?= htmlspecialchars($row['category']); ?></td>
                                     <td>
                                         <!-- Remove button -->
                                         <form action="wishlist.php" method="POST" style="display: inline;">
@@ -131,7 +132,7 @@ $productResult = $conn->query($productQuery);
         </div>
 
         <!-- Add products to wishlist -->
-        <div class="btn1">
+        <div class="add-to-wishlist">
             <?php if ($productResult->num_rows > 0): ?>
                 <?php while ($row = $productResult->fetch_assoc()): ?>
                     <?php
@@ -143,15 +144,50 @@ $productResult = $conn->query($productQuery);
                     $isInWishlist = $stmt->get_result()->num_rows > 0;
                     ?>
                     <?php if (!$isInWishlist): ?>
-                        <form action="wishlist.php" method="POST">
+                        <form action="wishlist.php" method="POST" class="wishlist-form">
                             <input type="hidden" name="product_id" value="<?= $row['id'] ?>">
-                            <button type="submit" name="add_to_wishlist" class="but">Add to Wishlist</button>
+                            <button type="submit" name="add_to_wishlist" class="btn-add">Add to Wishlist</button>
                         </form>
                     <?php endif; ?>
                 <?php endwhile; ?>
             <?php endif; ?>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const removeButtons = document.querySelectorAll(".btn-remove");
+
+            removeButtons.forEach(button => {
+                button.addEventListener("click", async (event) => {
+                    event.preventDefault();
+                    const form = button.closest('form');
+                    const productId = form.querySelector('input[name="product_id"]').value;
+
+                    const response = await fetch("wishlist.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            remove_from_wishlist: true,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        form.closest("tr").remove(); // Remove the item from the table
+                    } else {
+                        console.error("Failed to remove product from wishlist.");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
