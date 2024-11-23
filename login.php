@@ -31,9 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $_SESSION['first_name'] = $first_name;
                 $_SESSION['last_name'] = $last_name;
 
-                // Redirect to index.php after successful login
-                header("location: index.php");
-                exit;
+                // Redirect to the page the user was trying to access (if any)
+                if (isset($_SESSION['redirect_to'])) {
+                    $redirect_url = $_SESSION['redirect_to'];
+                    unset($_SESSION['redirect_to']);  // Clean up
+                    header("Location: $redirect_url");
+                    exit;
+                } else {
+                    // Otherwise, redirect to the homepage
+                    header("location: index.php");
+                    exit;
+                }
             } else {
                 // Display error if password is not valid
                 $password_err = "The password you entered was not valid.";
@@ -56,99 +64,91 @@ ob_end_flush(); // End output buffering and flush output
 <html lang="en">
 
 <head>
-     <!-- Required meta tags -->
-     <meta charset="utf-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-     <!-- Bootstrap CSS -->
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="projectstyles.css">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <title>Login - HAGS</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-     <link rel="stylesheet" href="projectstyles.css">
-     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-     <title>Login - HAGS</title>
-     <style>
-     body {
-          background-color: #f8f9fa;
-     }
+        .forms {
+            margin-top: 100px;
+        }
 
-     .forms {
-          margin-top: 100px;
-     }
+        .form-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
 
-     .form-content {
-          background-color: #ffffff;
-          padding: 30px;
-          border-radius: 10px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-     }
+        .headerr {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
 
-     .headerr {
-          font-size: 24px;
-          margin-bottom: 20px;
-          text-align: center;
-          font-weight: bold;
-     }
+        .input-field {
+            margin-bottom: 15px;
+        }
 
-     .input-field {
-          margin-bottom: 15px;
-     }
+        .button-field {
+            text-align: center;
+        }
 
-     .button-field {
-          text-align: center;
-     }
+        .form-link {
+            text-align: center;
+            margin-top: 15px;
+        }
 
-     .form-link {
-          text-align: center;
-          margin-top: 15px;
-     }
-
-     .btn-primary {
-          width: 100%;
-     }
-     </style>
+        .btn-primary {
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
-     <header>
-          <?php include('header.php'); ?>
-     </header>
-     <div class="gunjanlogin">
-          <div class="row justify-content-center gunjanddd">
-               <div class="col-md-4">
-                    <div class="form-content">
-                         <div class="headerr">Login</div>
-                         <form action="" method="post">
-                              <div class="field input-field">
-                                   <input type="text" name="username" placeholder="Username" class="input form-control"
-                                        required>
-                              </div>
+    <header>
+        <?php include('header.php'); ?>
+    </header>
+    <div class="gunjanlogin">
+        <div class="row justify-content-center gunjanddd">
+            <div class="col-md-4">
+                <div class="form-content">
+                    <div class="headerr">Login</div>
+                    <form action="" method="post">
+                        <div class="field input-field">
+                            <input type="text" name="username" placeholder="Username" class="input form-control" required>
+                        </div>
 
-                              <div class="field input-field">
-                                   <input type="password" name="password" placeholder="Password"
-                                        class="password form-control" required>
-                              </div>
+                        <div class="field input-field">
+                            <input type="password" name="password" placeholder="Password" class="password form-control" required>
+                        </div>
 
-                              <div class="field button-field">
-                                   <button type="submit" class="btn btn-primary">Login</button>
-                              </div>
-                         </form>
-                         <div class="form-link">
-                              <span>Don't have an account? <a href="register.php" class="link signup-link">Sign
-                                        Up</a></span>
-                         </div>
+                        <div class="field button-field">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                    <div class="form-link">
+                        <span>Don't have an account? <a href="register.php" class="link signup-link">Sign Up</a></span>
                     </div>
-               </div>
-          </div>
-     </div>
-     
+                </div>
+            </div>
+        </div>
+    </div>
 
-     <!-- Optional JavaScript -->
-     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous">
-     </script>
-     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous">
-     </script>
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
 </body>
 
