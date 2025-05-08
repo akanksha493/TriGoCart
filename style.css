@@ -28,6 +28,10 @@ header {
 	backdrop-filter: blur(2px);
 	/* background-color: transparent; */
 	background-color: var(--gradient-black);
+	z-index: 100;
+
+	/* padding: 1rem; */
+	/* box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.11); */
 }
 .logo {
 	display: flex;
@@ -36,7 +40,6 @@ header {
 	width: 12vw;
 	height: 10vh;
 }
-
 .logo1 {
 	width: 70%; /* Make logo1 smaller than the logo div */
 	height: 70%; /* Adjust to maintain proportions */
@@ -45,6 +48,25 @@ header {
 	background-position: center; /* Centers the image within the div */
 	background-repeat: no-repeat; /* Prevents repeating of the image */
 }
+
+/* #search,
+.go-bttn {
+	padding: 0.5rem 1rem;
+	border: 1px solid black;
+}
+#search {
+	border-top-left-radius: 1rem;
+	border-bottom-left-radius: 1rem;
+	width: 300px;
+	outline: none;
+}
+.go-bttn {
+	border-top-right-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+	background-color: black;
+	color: white;
+	cursor: pointer;
+} */
 
 .listheader {
 	padding-left: 60%;
@@ -123,16 +145,19 @@ footer {
 #search {
 	padding: 0.5rem 1rem;
 	border: 1px solid var(--yellow);
+	border-top-left-radius: 1rem;
+	border-bottom-left-radius: 1rem;
 	width: 300px;
 	outline: none;
-	background-color: var(--gradient-black2);
+	background-color: var(--gradient-black);
 	color: var(--yellow);
 	font-size: 1rem;
 	transition: all 0.3s ease-in-out;
+	border-radius: 30px;
 }
 
 #search::placeholder {
-	color: rgba(255, 210, 0, 0.6); /* Slightly lighter shade of yellow */
+	color: rgba(255, 210, 0, 0.6);
 	font-style: italic;
 }
 
@@ -140,7 +165,6 @@ footer {
 	background-color: var(--gradient-black);
 
 	box-shadow: 0 0 10px var(--yellow), 0 0 25px var(--yellow);
-	/* border-color: var(--yellow); */
 }
 
 .go-bttn {
@@ -151,6 +175,7 @@ footer {
 	cursor: pointer;
 	transition: all 0.3s ease-in-out;
 	font-weight: bold;
+	border-radius: 20px;
 }
 
 .go-bttn:hover {
@@ -166,9 +191,26 @@ footer {
 	box-shadow: none;
 	font-family: var(--body-font);
 	font-weight: 900;
+	/* Optional: Removes any shadows if present */
 	color: var(--yellow);
 	height: 10vh;
 }
+
+/* .navul {
+	display: grid;
+	grid-template-columns: auto 1fr max-content 50px;
+	align-items: center;
+	gap: 3rem;
+	padding-left: 20%
+} */
+/* 
+.navulgunj li {
+	display: inline;
+	color: hsl(28, 88%, 62%);
+	height: 2vh;
+	width: 6vw;
+	align-items: center;
+} */
 
 .navulgunj {
 	/* align-items: right; */
@@ -178,7 +220,10 @@ footer {
 	padding-left: 4%;
 	text-shadow: -0.5px -0.5px 0 black, /* Top-left */ 0.5px -0.5px 0 black,
 		/* Top-right */ -0.5px 0.5px 0 black, /* Bottom-left */ 0.5px 0.5px 0 black; /* Bottom-right */
+
+	/* font-size: 13rem; */
 	gap: 1.5%;
+	/* height: 5vh; */
 	list-style-type: none;
 }
 
@@ -194,17 +239,25 @@ footer {
 	font-size: 0.9rem;
 	text-shadow: -2px -2px 0 black, /* Top-left */ 2px -2px 0 black,
 		/* Top-right */ -2px 2px 0 black, /* Bottom-left */ 2px 2px 0 black; /* Bottom-right */
+
+	/* height: 7vh; */
+	/* width: 6vw; */
 	text-decoration: none;
 	font-weight: bold;
 	padding: 7px 10px;
 	border-radius: 30px;
 	transition: 0.6s ease;
-
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
 	width: 6.5rem;
 	justify-content: center;
 	text-align: center;
 }
+/* .nav-item a:hover { */
+/* .navdiv :hover { */
 .nav-item :hover {
+	/* .nav-divnk:hover { */
 	background-color: var(--yellow);
 	text-shadow: -0.5px -0.5px 0 black, /* Top-left */ 0.5px -0.5px 0 black,
 		/* Top-right */ -0.5px 0.5px 0 black, /* Bottom-left */ 0.5px 0.5px 0 black; /* Bottom-right */
@@ -217,6 +270,7 @@ footer {
 
 .logdiv {
 	padding-left: 0.5em;
+	/* color: white; */
 }
 
 .maincontent1 {
@@ -227,6 +281,8 @@ footer {
 	align-items: center;
 	display: flex;
 	flex-direction: row;
+	/* position: relative; */
+
 	background-size: cover;
 }
 .textbox {
@@ -241,7 +297,15 @@ footer {
 	place-content: center;
 	/* padding-left: 15%; */
 }
+/* .textbox {
+	height: 70vh;
+	width: 50vw;
 
+	text-align: center;
+	place-items: center;
+	place-content: center;
+	padding-left: 15%;
+} */
 .pict {
 	height: 70vh;
 	width: 60vw;
@@ -251,6 +315,11 @@ footer {
 
 	object-position: center;
 	position: absolute;
+	/* background-image: url(./images/shop-removebg-preview.png); */
+	/* object-fit: cover;
+	object-position: center; 
+	position: absolute;
+	justify-self: center;*/
 	max-width: 30%;
 	max-height: 50%;
 }
@@ -271,6 +340,9 @@ footer {
 
 .user-profile {
 	display: flex;
+	/* align-items: center; */
+	/* justify-content: flex-start; */
+	/* gap: 10px; Space between the icon and the name */
 }
 
 .user-profile .icon {
@@ -289,6 +361,16 @@ footer {
 	/* size: inherit; */
 }
 
+/* .user-profile .logdiva:hover {
+	background: var(--yellow);
+	color: rgb(22, 20, 15);
+	=
+	border: 2px solid var(--yellow);
+	box-shadow: 0 0 5px var(--yellow), 0 0 25pxhsl (28, 88%, 62%);
+	cursor: pointer;
+	transform: scale(1.1);
+} */
+
 .login {
 	display: flex;
 	flex-direction: row; /* Stack the logout link below the username */
@@ -304,6 +386,8 @@ footer {
 	cursor: pointer;
 	text-shadow: -2px -2px 0 black, /* Top-left */ 2px -2px 0 black,
 		/* Top-right */ -2px 2px 0 black, /* Bottom-left */ 2px 2px 0 black; /* Bottom-right */
+
+	/* padding-right: 3%; */
 }
 
 .user-profile .login a {
@@ -326,6 +410,47 @@ footer {
 	}
 }
 
+/*
+.btn1 {
+	/* padding-left: 10%;
+	padding-top: 4%; 
+	text-decoration: none;
+	justify-content: center;
+	object-position: center;
+	justify-self: center;
+	object-position: center;
+	justify-self: center;
+	display: flex;
+	object-position: center;
+	text-align: center;
+	place-items: center;
+	place-content: center;
+	border-radius: 30px;
+	transition: 0.6s ease;
+	display: block;
+	padding-left: 4%;
+	background-color: rgb(22, 20, 15);
+	width: fit-content;
+	padding: 14px 50px;
+	text-decoration: none;
+	color: var(--yellow);
+	transition: background 0.5s;
+	font-weight: bold;
+	font-size: large;
+	padding: 13px 30px;
+	cursor: pointer;
+	border-radius: 30px;
+	transition: 0.4s ease;
+}
+.btn1:hover {
+	background: var(--yellow);
+	color: rgb(22, 20, 15);
+	border: 2px solid var(--yellow);
+	box-shadow: 0 0 5px var(--yellow), 0 0 25pxhsl (28, 88%, 62%);
+	cursor: pointer;
+	transform: scale(1.1);
+} */
+
 .divelect {
 	background: url("./images/desk-office.jpg") no-repeat center center;
 	width: 100vw;
@@ -339,7 +464,7 @@ footer {
 	background-size: cover;
 }
 .gunjcont {
-	margin-top: 10%;
+	margin-top: 7%;
 	margin-left: 15%;
 	margin-right: 10%;
 }
@@ -367,6 +492,39 @@ footer {
 	text-align: center;
 	border-radius: 5px;
 }
+
+/*
+.login a:hover {
+	background: hsl(28, 88%, 62%);
+	color: white;
+	border: 2px solid hsl(28, 88%, 62%);
+	box-shadow: 0 0 5px hsl(28, 88%, 62%), 0 0 25pxhsl (28, 88%, 62%);
+	cursor: pointer;
+	transform: scale(1.1);
+} 
+/* 
+.nav-item a {
+	background: transparent;
+	color: hsl(28, 88%, 62%);
+	font-size: x-large;
+	
+	text-decoration: none;
+	
+	font-weight: bold;
+	padding: 13px 30px;
+	border-radius: 30px;
+	transition: 0.4s ease;
+}
+.nav-item a:hover {
+	background: hsl(28, 88%, 62%);
+	color: black;
+	border: 2px solid hsl(28, 88%, 62%);
+	box-shadow: 0 0 5px hsl(28, 88%, 62%), 0 0 25pxhsl (28, 88%, 62%);
+	cursor: pointer;
+	transform: scale(1.1);
+	hsla(0,0%,6%,.2);
+	backdrop-filter blur(16px)
+} */
 
 .btn1 {
 	display: flex;
@@ -396,10 +554,12 @@ footer {
 	color: rgb(22, 20, 15);
 	border: 2px solid var(--yellow);
 	box-shadow: 0 0 5px var(--yellow), 0 0 15px var(--yellow);
+	/* box-shadow: 0 0 5px var(--yellow), 0 0 25pxhsl (28, 88%, 62%); */
 	cursor: pointer;
 	transform: scale(1.1);
 }
 
+/*__________________________________________________________________________________________________*/
 .gunjanlogin {
 	display: flex;
 	justify-content: center;
@@ -426,6 +586,7 @@ footer {
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Add a soft shadow */
 	color: white; /* Text color */
 	width: 100%; /* Full width of the parent */
+	/* max-width: 400px; Max width for better form alignment */
 }
 
 .headerr {
@@ -474,6 +635,7 @@ footer {
 	font-weight: bold;
 	color: black;
 	background-color: var(--yellow); /* Bright yellow button */
+	/* transition: all 0.4s ease-in-out; */
 	cursor: pointer;
 	border-radius: 30px;
 	transition: 0.4s ease;
@@ -506,19 +668,35 @@ footer {
 	color: white; /* Change to white on hover */
 }
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/* cart */
+
+/* Cart Page Styles */
+/* .cart-container {
+	background-color: rgb(0, 0, 0, 0.9); /* Black with slight transparency 
+	color: white;  Text color 
+	padding: 40px;
+	border-radius: 8px;
+	max-width: 1200px;
+	margin: 20px auto;
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+} */
+
 .cart-container {
 	width: 100vw; /* Full width of the viewport */
-	height: 90vh; /* Full height of the viewport */
+	height: 100vh; /* Full height of the viewport */
 	display: flex; /* Use flexbox for centering */
 	flex-direction: column; /* Stack elements vertically */
-	justify-content: center; /* Center contents vertically */
+	justify-content: start; /* Center contents vertically */
 	align-items: center; /* Center contents horizontally */
-	padding: 20px;
+	/* padding: 20px; */
 	background-image: url("./images/Cart.jpeg"); /* Path to your image */
 	background-size: cover; /* Ensure the image covers the entire viewport */
 	background-position: center; /* Center the image in the viewport */
 	background-repeat: no-repeat; /* Prevent the image from repeating */
 	box-sizing: border-box;
+	padding-top: 13vh;
 }
 
 .cart-title {
@@ -531,10 +709,11 @@ footer {
 .cart-empty-message {
 	color: rgb(255, 210, 0, 0.9); /* Yellow */
 	text-align: center;
-	font-size: 1.2rem;
+	font-size: 5rem;
 	padding: 20px;
 	background-color: rgba(0, 0, 0, 0.7);
 	border-radius: 8px;
+	font-family: var(--body-font);
 }
 .cart-table-wrapper-out {
 	width: 70vw;
@@ -559,17 +738,17 @@ footer {
 
 .cart-table th,
 .cart-table td {
-	padding: 15px;
+	padding: 1.5%;
+	font-size: larger;
+	font-weight: bold;
+	font-family: var(--body-font);
 	text-align: center;
 }
-.cart-table thead th {
-	background-color: rgb(255, 210, 0, 0.9); /* Yellow */
-	color: #000; /* Black text */
-	font-size: 1rem;
-	text-transform: uppercase;
-	font-weight: bold;
-}
 
+/* .cart-table tbody tr:nth-child(even) {
+	background-color: #333;
+}
+ */
 .cart-product-quantity {
 	display: flex;
 	justify-content: center;
@@ -579,6 +758,7 @@ footer {
 	background-color: #444; /* Highlight on hover */
 }
 
+/* Quantity Input Styling */
 .quantity-form {
 	display: flex;
 	align-items: center;
@@ -590,7 +770,10 @@ footer {
 	width: 50px;
 	text-align: center;
 	border: none;
+	/* border-radius: 4px; */
+	/* background-color: #fff; */
 	font-weight: bold;
+	/* color: #000; */
 	background-color: transparent;
 	color: #000;
 	text-shadow: -0.5px -0.5px 0 var(--yellow),
@@ -616,6 +799,7 @@ footer {
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
+	/* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
 	transition: transform 0.2s ease-in-out;
 }
 
@@ -652,19 +836,43 @@ footer {
 }
 
 /* Clear Cart Button */
-.btn-clear-cart {
-	background-color: rgb(255, 210, 0, 0.9); /* Yellow */
-	color: black;
-	font-size: 1rem;
-	padding: 10px 20px;
-	border-radius: 4px;
-	font-weight: bold;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
+.clearplace {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end; /* Aligns buttons to the right */
+	gap: 5%; /* Adds spacing between the buttons */
+	width: 20vw;
+	align-items: flex-end; /* Aligns items vertically */
 }
 
-.btn-clear-cart:hover {
-	background-color: rgb(255, 190, 0, 0.9); /* Darker yellow */
+.btn-clear-cart,
+.btn-place-order {
+	border-radius: 30px;
+	transition: 0.6s ease;
+	display: block;
+	padding-left: 4%;
+	background-color: rgb(22, 20, 15);
+	width: fit-content;
+	padding: 14px 50px;
+	text-decoration: none;
+	color: var(--yellow);
+	transition: background 0.5s;
+	font-weight: bold;
+	font-size: large;
+	padding: 13px 30px;
+
+	border-radius: 30px;
+	transition: 0.4s ease;
+}
+.btn-clear-cart:hover,
+.btn-place-order:hover {
+	background: var(--yellow);
+	color: rgb(22, 20, 15);
+	border: 2px solid var(--yellow);
+	box-shadow: 0 0 5px var(--yellow), 0 0 15px var(--yellow);
+	/* box-shadow: 0 0 5px var(--yellow), 0 0 25pxhsl (28, 88%, 62%); */
+	cursor: pointer;
+	transform: scale(1.1);
 }
 
 /* Cart Summary */
@@ -673,13 +881,66 @@ footer {
 	justify-content: space-between;
 	align-items: center;
 	padding: 20px;
-	background: rgb(255, 210, 0, 0.9); /* Yellow background */
+	background-color: transparent;
+	padding-bottom: 5vh;
 	border-radius: 8px;
 	color: black;
+	width: 70vw;
+	height: 5vh;
 }
 
 .cart-summary h3 {
 	margin: 0;
 	font-size: 1.5rem;
 	font-weight: bold;
+	color: var(--yellow);
+}
+
+/* Specific styling for the Add to Cart button */
+.add-to-cart-btn {
+	background-color: black; /* Base primary color */
+	border: var(--yellow); /* Remove border */
+	border-radius: 25px; /* Rounded edges */
+	color: var(--yellow); /* Text color */
+	font-weight: bold; /* Bold text */
+	padding: 10px 20px; /* Padding for size */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+	transition: all 0.3s ease; /* Smooth hover effect */
+}
+
+.add-to-wishlist-btn svg {
+	height: 2rem;
+	width: 2rem;
+	fill: brown;
+}
+.formflex {
+	display: flex;
+	flex-direction: row;
+}
+.add-to-wishlist-btn {
+	background-color: transparent;
+	border: none;
+	padding-top: 5px;
+	padding-left: 10px;
+}
+
+.add-to-cart-btn:hover {
+	background-color: var(--yellow); /* Darker blue on hover */
+	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+	transform: scale(1.1); /* Slight lift on hover */
+	color: black;
+	border: 1px solid black;
+}
+.add-to-cart-btn:active {
+	background-color: black; /* Base primary color */
+	border: var(--yellow); /* Remove border */
+	border-radius: 25px; /* Rounded edges */
+	color: var(--yellow); /* Text color */
+	font-weight: bold; /* Bold text */
+	padding: 10px 20px; /* Padding for size */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+	transition: all 0.3s ease; /* Smooth hover effect */
+}
+.filter{
+	position: absolute;
 }

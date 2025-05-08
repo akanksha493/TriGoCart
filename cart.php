@@ -1,37 +1,142 @@
 <?php
-session_start(); // Start session to use cart functionality
-include('header.php'); // Include the header
+session_start(); // Start the session
 
-// Initialize the cart if it doesn't exist
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
+// Include the database connection
+require "dbconfig.php";
+
+
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect to login page
+    header("Location: login.php");
+    exit;
 }
+
+
+// Get the logged-in user's ID
+$user_id = $_SESSION['id'];
 
 // Handle removing an item from the cart
 if (isset($_POST['remove_item'])) {
-    $productId = $_POST['product_id'];
-    unset($_SESSION['cart'][$productId]);
+    $cart_id = intval($_POST['product_id']);
+    $query = "DELETE FROM cart WHERE id = ? AND user_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "ii", $cart_id, $user_id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 }
 
 // Handle updating quantity
 if (isset($_POST['update_quantity'])) {
-    $productId = $_POST['product_id'];
+    $cart_id = intval($_POST['product_id']);
     $quantity = intval($_POST['quantity']);
+
     if ($quantity > 0) {
-        $_SESSION['cart'][$productId]['quantity'] = $quantity;
+        $query = "UPDATE cart SET quantity = ? WHERE id = ? AND user_id = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "iii", $quantity, $cart_id, $user_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
     } else {
-        unset($_SESSION['cart'][$productId]);
+        // Remove item if quantity is set to 0
+        $query = "DELETE FROM cart WHERE id = ? AND user_id = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "ii", $cart_id, $user_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
     }
 }
 
 // Handle clearing the cart
 if (isset($_POST['clear_cart'])) {
-    $_SESSION['cart'] = [];
+    $query = "DELETE FROM cart WHERE user_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 }
 
-// Fetch cart items
-$cartItems = $_SESSION['cart'];
+// Handle placing an order
+if (isset($_POST['place_order'])) {
+    $query = "SELECT c.id, c.quantity, p.id AS product_id, p.price
+              FROM cart c 
+              JOIN product p ON c.product_id = p.id 
+              WHERE c.user_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_bind_result($stmt, $cart_id, $quantity, $product_id, $price);
+
+    $orderItems = [];
+    $totalAmount = 0;
+
+    while (mysqli_stmt_fetch($stmt)) {
+        $totalAmount += $price * $quantity;
+        $orderItems[] = ['product_id' => $product_id, 'quantity' => $quantity, 'price' => $price];
+    }
+    mysqli_stmt_close($stmt);
+
+    if (!empty($orderItems)) {
+        $orderDate = date('Y-m-d H:i:s');
+        $status = 'Pending';
+
+        // Insert the order into the orders table
+        $query = "INSERT INTO orders (user_id, order_date, status, total_amount) 
+                  VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "issd", $user_id, $orderDate, $status, $totalAmount);
+        mysqli_stmt_execute($stmt);
+        $order_id = mysqli_insert_id($conn);
+        mysqli_stmt_close($stmt);
+
+        // Insert order items into order_items table
+        foreach ($orderItems as $item) {
+            $query = "INSERT INTO order_items (order_id, product_id, quantity, price) 
+                      VALUES (?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "iiid", $order_id, $item['product_id'], $item['quantity'], $item['price']);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        }
+
+        // Clear the cart after placing the order
+        $query = "DELETE FROM cart WHERE user_id = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $user_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        // Redirect to order confirmation page
+        header("Location: order_confirmation.php?order_id=" . $order_id);
+        exit();
+    }
+}
+
+// Fetch cart items for display
+$sql = "SELECT c.id, c.quantity, p.name, p.price, (c.quantity * p.price) AS total 
+        FROM cart c 
+        JOIN product p ON c.product_id = p.id 
+        WHERE c.user_id = ?";
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+mysqli_stmt_bind_result($stmt, $cart_id, $quantity, $product_name, $price, $total);
+
+$cartItems = [];
+$grandTotal = 0;
+while (mysqli_stmt_fetch($stmt)) {
+    $cartItems[] = [
+        'id' => $cart_id,
+        'name' => $product_name,
+        'price' => $price,
+        'quantity' => $quantity,
+        'total' => $total
+    ];
+    $grandTotal += $total;
+}
+mysqli_stmt_close($stmt);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,18 +158,16 @@ $cartItems = $_SESSION['cart'];
           <?php if (empty($cartItems)): ?>
           <p class="cart-empty-message">Your cart is empty!</p>
           <?php else: ?>
+          <div class="cart-summary">
+               <h3 id="grand-total">Total: ₹<?= number_format($grandTotal, 2); ?></h3>
+               <form method="POST" action="" class="clearplace">
+                    <button type="submit" name="clear_cart" class="btn-clear-cart">Clear Cart</button>
+                    <button type="submit" name="place_order" class="btn-place-order">Place Order</button>
+               </form>
+          </div>
           <div class="cart-table-wrapper-out">
                <div class="cart-table-wrapper-in">
                     <table class="cart-table">
-                         <!-- <thead>
-                         <tr>
-                              <th>Product</th>
-                              <th>Price</th>
-                              <th>Quantity</th>
-                              <th>Total</th>
-                              <th>Actions</th>
-                         </tr>
-                    </thead> -->
                          <tbody id="cart-items">
                               <?php 
                         $grandTotal = 0;
@@ -77,41 +180,20 @@ $cartItems = $_SESSION['cart'];
                                    <td class="cart-product-price">₹<?= number_format($item['price'], 2); ?></td>
                                    <td class="cart-product-quantity">
                                         <div class="quantity-controls">
-                                             <button class="quantity-btn minus-btn" data-action="decrease"> <svg
-                                                       xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                       fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
-                                                       <path fill-rule="evenodd"
-                                                            d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8" />
-                                                  </svg></button>
+                                             <button class="quantity-btn minus-btn" data-action="decrease">-</button>
                                              <input type="text" class="cart-quantity-input"
                                                   value="<?= $item['quantity']; ?>" readonly>
-                                             <button class="quantity-btn plus-btn" data-action="increase"><svg
-                                                       xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                       fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                                       <path fill-rule="evenodd"
-                                                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                                                  </svg></i></i></button>
+                                             <button class="quantity-btn plus-btn" data-action="increase">+</button>
                                         </div>
                                    </td>
                                    <td class="cart-product-total">₹<?= number_format($itemTotal, 2); ?></td>
-                                   <!-- <td class="cart-product-actions">
-                                   <form method="POST" action="">
-                                        <input type="hidden" name="product_id" value="<?= $productId; ?>">
-                                        <button type="submit" name="remove_item" class="btn-remove">Remove</button>
-                                   </form>
-                              </td> -->
                               </tr>
                               <?php endforeach; ?>
                          </tbody>
                     </table>
                </div>
           </div>
-          <div class="cart-summary">
-               <h3 id="grand-total">Total: ₹<?= number_format($grandTotal, 2); ?></h3>
-               <form method="POST" action="">
-                    <button type="submit" name="clear_cart" class="btn-clear-cart">Clear Cart</button>
-               </form>
-          </div>
+
           <?php endif; ?>
      </div>
 

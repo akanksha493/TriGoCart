@@ -27,11 +27,22 @@ if (session_status() == PHP_SESSION_NONE) {
                </div>
                <!-- Search bar -->
                <div style="display: flex; justify-content: center; height: 6vh; ">
-                    <div style="padding: 2.5vh 0vh; margin-left:2rem;"><input id="search" type="text"
-                              placeholder="Search for products..." />
-                         <button class="go-bttn">Go</button>
-                    </div>
-               </div>
+               <?php
+                    $current_page = basename($_SERVER['PHP_SELF']);
+                    if ($current_page == 'get_books.php' || $current_page == 'get_electronics.php' || $current_page == 'get_cloths.php') :
+               ?>
+                    <form action="search.php" method="get" style="padding: 2.5vh 0vh; margin-left:2rem;">
+                         <input id="search" type="text" name="search" placeholder="Search for products..." 
+                         <?php if(isset($_GET["search"]) && !empty($_GET['search'])):?>
+                              value = "<?php echo $_GET["search"] ?>"
+                         <?php else:?>
+                              value = ""
+                         <?php endif;?>
+                         />
+                         <input type="hidden" name="current_url" value="<?php echo $_SERVER['REQUEST_URI'] ?>">
+                         <button class="go-bttn" type="submit">Go</button>
+                    </form>
+               <?php endif;?>
 
                <!-- Navigation list -->
                <div class="navlist">
@@ -49,15 +60,18 @@ if (session_status() == PHP_SESSION_NONE) {
                          <div class="nav-item"><a href="get_books.php" style="text-decoration: none;">
                                    <div class="navdiv">Books</div>
                               </a></div>
+                         <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']): ?>
                          <div class="nav-item"><a href="wishlist.php" style="text-decoration: none;">
                                    <div class="navdiv">Wishlist</div>
                               </a></div>
                          <div class="nav-item"><a href="cart.php" style="text-decoration: none;">
                                    <div class="navdiv">Cart</div>
                               </a></div>
+                         <?php else: ?>
                          <div class="nav-item"><a href="register.php" style="text-decoration: none;">
                                    <div class="navdiv">Register</div>
                               </a></div>
+                         <?php endif; ?>
 
                          <div class="nav-item">
                               <a href="profile.php" style="text-decoration: none;">
